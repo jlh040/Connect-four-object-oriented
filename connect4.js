@@ -3,8 +3,8 @@ class Game {
     this.height = height;
     this.width = width;
     this.board = [];
-    this.currPlayer = 1;
-    this.endMessage = `Player ${this.currPlayer} won the game!!`
+    this.currPlayer = player_one;
+    this.endMessage = `Player ${this.currPlayer === player_one ? 1 : 2} won the game!!`
   }
 
   makeBoard() {
@@ -53,8 +53,9 @@ class Game {
   placeInTable(y, x) {
     const piece = document.createElement('div');
     piece.classList.add('piece');
-    piece.classList.add(`p${this.currPlayer}`);
+    piece.classList.add(`p${this.currPlayer === player_one ? 1 : 2}`);
     piece.style.top = -50 * (y + 2);
+    piece.style.backgroundColor = piece.classList.contains('p1') ? player_one.color : player_two.color;
 
     const spot = document.getElementById(`${y}-${x}`);
     spot.append(piece);
@@ -75,13 +76,13 @@ class Game {
     }
 
     // place piece in board and add to HTML table
-    this.board[y][x] = this.currPlayer;
+    this.board[y][x] = this.currPlayer.playerNumber;
     this.placeInTable(y, x);
   
     // check for win
     if (this.checkForWin()) {
       for (let i = 0; i < this.width; i++) {
-        document.getElementById(`${i}`).id = "55";
+        document.getElementById(`${i}`).id = "7";
       }
       return this.endGame(this.endMessage);
     }
@@ -92,7 +93,7 @@ class Game {
     }
     
     // switch players
-    this.currPlayer = this.currPlayer === 1 ? 2 : 1;
+    this.currPlayer = this.currPlayer === player_one ? player_two : player_one;
   }
 
   checkForWin() {
@@ -107,7 +108,7 @@ class Game {
           y < this.height &&
           x >= 0 &&
           x < this.width &&
-          this.board[y][x] === this.currPlayer
+          this.board[y][x] === this.currPlayer.playerNumber
       );
     }
   
@@ -130,13 +131,14 @@ class Game {
 }
 
 class Player {
-  constructor(color) {
+  constructor(color, playerNumber) {
     this.color = color;
+    this.playerNumber = playerNumber;
   }
 }
 
-let player_one = new Player()
-let player_two = new Player()
+let player_one = new Player(null, 'player1');
+let player_two = new Player(null, 'player2');
 
 
 
@@ -163,6 +165,9 @@ function gameFlow(e) {
   else if (e.target.id === "start-game") {
     ourGame.makeBoard();
     ourGame.makeHtmlBoard();
+    player_one.color = document.querySelector("#player-1").value
+    player_two.color = document.querySelector("#player-2").value
+
   }
   else if ([0,1,2,3,4,5,6].includes(+e.target.id)) {
     ourGame.handleClick(e)
