@@ -138,21 +138,9 @@ class Player {
   }
 }
 
+let ourGame = new Game(6,7);
 let player_one = new Player(null, 'player1', 1);
 let player_two = new Player(null, 'player2', 2);
-
-
-
-
-
-
-
-
-
-
-
-
-let ourGame = new Game(6,7);
 
 document.querySelector("body").addEventListener("click", gameFlow);
 
