@@ -4,7 +4,7 @@ class Game {
     this.width = width;
     this.board = [];
     this.currPlayer = player_one;
-    this.endMessage = `Player ${this.currPlayer === player_one ? 1 : 2} won the game!!`
+    this.gameOver = "The game is over!!!!";
   }
 
   makeBoard() {
@@ -62,7 +62,7 @@ class Game {
   }
 
   endGame(msg) {
-    alert(msg);
+    alert(msg + ` Player ${this.currPlayer.playerId} won!`);
   }
 
   handleClick(evt) {
@@ -82,9 +82,9 @@ class Game {
     // check for win
     if (this.checkForWin()) {
       for (let i = 0; i < this.width; i++) {
-        document.getElementById(`${i}`).id = "7";
+        document.getElementById(`${i}`).id = null;
       }
-      return this.endGame(this.endMessage);
+      return this.endGame(this.gameOver);
     }
   
     // check for tie
@@ -131,14 +131,15 @@ class Game {
 }
 
 class Player {
-  constructor(color, playerNumber) {
+  constructor(color, playerNumber, playerId) {
     this.color = color;
     this.playerNumber = playerNumber;
+    this.playerId = playerId;
   }
 }
 
-let player_one = new Player(null, 'player1');
-let player_two = new Player(null, 'player2');
+let player_one = new Player(null, 'player1', 1);
+let player_two = new Player(null, 'player2', 2);
 
 
 
@@ -161,6 +162,8 @@ function gameFlow(e) {
     ourGame.makeBoard();
     document.querySelector("#board").innerHTML = "";
     ourGame.makeHtmlBoard();
+    player_one.color = document.querySelector("#player-1").value
+    player_two.color = document.querySelector("#player-2").value
   }
   else if (e.target.id === "start-game") {
     ourGame.makeBoard();
@@ -169,7 +172,7 @@ function gameFlow(e) {
     player_two.color = document.querySelector("#player-2").value
 
   }
-  else if ([0,1,2,3,4,5,6].includes(+e.target.id)) {
+  else if (e.target.id in [0,1,2,3,4,5,6]) {
     ourGame.handleClick(e)
   }
 }
